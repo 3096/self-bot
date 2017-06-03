@@ -1,5 +1,7 @@
 # List of available time zones
 
+Note that the POXIS standard inverts the +/- for GMT representations. You should also avoid using GMT notation as they do not contain information regarding seasonal time changes like daylight saving time.
+
 - Africa/Abidjan
 - Africa/Accra
 - Africa/Addis_Ababa
