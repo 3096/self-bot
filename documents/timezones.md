@@ -1,7 +1,26 @@
-# List of available time zones
+#!settime
 
-Note that the POXIS standard inverts the +/- for GMT representations. You should also avoid using GMT notation as they do not contain information regarding seasonal time changes like daylight saving time.
+`!settime` command tells the bot which timezone you're in. To use the command, simply type:
 
+`!settime {city/region}`
+
+The parameter `{city/region}` represents the time zone you're in. You can find the full list of it below. For example, if you're in California, type:
+
+`!settime US/Pacific`
+
+Keep in mind, the bot will search in the list below for the parameter you give, whlie sometimes it works even if you don't type the full name of the time zone region as listed below, but if multiple time zone regions contain the keyword, the bot will simply pick the first match. For example, if you type:
+
+`!settime pacific`
+
+The bot will automatically pick `Canada/Pacific` rather than `US/Pacific`. Although these two time zones are identical, it wouldn't always be the case. If the bot sets an incorrect time zone, make sure to use the full name of your time zone region as listed below.
+
+Do NOT use GMT notation, as they do not contain information regarding seasonal time changes like daylight saving time, and POXIS standard inverts the +/- for GMT representations which means you will end up with incorrect time zone if you do not know what you're doing.
+
+Only admins can set time zone for others. The usage is mostly the same except you need to mention the member whose time zone you want to set, for example:
+
+`settime! @mentionSomeone Los_Angeles`
+
+## List of available time zones
 - Africa/Abidjan
 - Africa/Accra
 - Africa/Addis_Ababa

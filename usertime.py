@@ -17,8 +17,12 @@ def get_all_timezones():
     return response
 
 def set_time(ctx, *args):
+    usagePage = "https://github.com/3096/self-bot/blob/master/documents/timezones.md"
+
     if len(args) == 0:
-        return "Usage: !settime {your time zone}"
+        response = "Usage: !settime {city/region}\n\nRefer to this page to check usage details and available time zones:\n"
+        response += usagePage
+        return response
 
     if len(ctx.message.mentions) > 0:
         if ctx.message.mentions[0] != ctx.message.author and not ctx.message.author.server_permissions.administrator:
@@ -33,7 +37,9 @@ def set_time(ctx, *args):
         if tz is not None:
             break
     if tz is None:
-        return "No time zone match found! Try !timezones to check available time zones."
+        response = "No time zone match found! Refer to this page to check usage and available time zones:\n"
+        response += usagePage
+        return response
 
     with open('config/usertime.json', 'r') as f:
         usertimes = json.load(f)
@@ -43,23 +49,31 @@ def set_time(ctx, *args):
 
     return "{}'s time zone has been set to \"{}\"".format(member.mention, tz)
 
-def get_timestr(member, usertimes):
-    return datetime.now(timezone(usertimes[member.id])).strftime("%I:%M %p, %a %b. %d (%Z%z)")
+def get_timestr(tz):
+    return datetime.now(timezone(tz)).strftime("%I:%M %p, %a %b. %d (%Z%z)")
 
-def get_time_msg(member, usertimes):
+def get_time_msg(member, author, usertimes):
     if member.id in usertimes:
-        return "{}'s time is {}.".format(member.mention, get_timestr(member, usertimes))
+        tz = timezone(usertimes[member.id])
+        if member is author:
+            return "{}, your time is {}.".format(author.mention, get_timestr(tz))
+        else:
+            return "{}'s time is {}.".format(member.mention, get_timestr(tz))
     else:
-        return "I don't know {}'s time zone, use !settime to tell me!".format(member.mention)
+        if member is author:
+            return "I don't know your time zone, {}. use !settime to tell me!".format(author.mention)
+        else:
+            return "I don't know {}'s time zone, use !settime to tell me!".format(member.mention)
 
-def get_time_of(members, usertimes, response):
+def get_time_of(members, author, usertimes, response):
     for member in members:
-        response += get_time_msg(member, usertimes) + "\n"
+        response += get_time_msg(member, author, usertimes) + "\n"
     return response
 
 def get_time(ctx, *args):
     with open('config/usertime.json', 'r') as f:
         usertimes = json.load(f)
+    author = ctx.message.author
 
     for kw in args:
         if kw.lower() == "online":
@@ -68,13 +82,13 @@ def get_time(ctx, *args):
                 if member.status == discord.Status.online and not member.bot:
                     members.append(member)
 
-            return get_time_of(members, usertimes, "Here is all online members' local time:\n")
+            return get_time_of(members, author, usertimes, "Here is all online members' local time:\n")
+
+        tz = find_tz(kw.lower())
+        if tz is not None:
+            return "Time in {} is {}".format(tz, get_timestr(tz))
 
     if len(ctx.message.mentions) > 0:
-        return get_time_of(ctx.message.mentions, usertimes, "")
+        return get_time_of(ctx.message.mentions, author, usertimes, "")
     else:
-        author = ctx.message.author
-        if author.id in usertimes:
-            return "{}, your time is {}.".format(author.mention, get_timestr(author, usertimes))
-        else:
-            return "I don't know your time zone, {}. use !settime to tell me!".format(author.mention)
+        return get_time_msg(author, author, usertimes)
