@@ -1,4 +1,4 @@
-#!settime
+# !settime
 
 `!settime` command tells the bot which timezone you're in. To use the command, simply type:
 
