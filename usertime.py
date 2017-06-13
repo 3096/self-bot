@@ -54,7 +54,7 @@ def get_timestr(tz):
 
 def get_time_msg(member, author, usertimes):
     if member.id in usertimes:
-        tz = timezone(usertimes[member.id])
+        tz = usertimes[member.id]
         if member is author:
             return "{}, your time is {}.".format(author.mention, get_timestr(tz))
         else:
@@ -68,6 +68,7 @@ def get_time_msg(member, author, usertimes):
 def get_time_of(members, author, usertimes, response):
     for member in members:
         response += get_time_msg(member, author, usertimes) + "\n"
+        print(response)
     return response
 
 def get_time(ctx, *args):
@@ -84,7 +85,7 @@ def get_time(ctx, *args):
 
             return get_time_of(members, author, usertimes, "Here is all online members' local time:\n")
 
-        tz = find_tz(kw.lower())
+        tz = find_tz(kw)
         if tz is not None:
             return "Time in {} is {}".format(tz, get_timestr(tz))
 
