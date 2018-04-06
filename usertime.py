@@ -56,14 +56,14 @@ def get_time_msg(member, author, usertimes):
     if member.id in usertimes:
         tz = usertimes[member.id]
         if member is author:
-            return "{}, your time is {}.".format(author.mention, get_timestr(tz))
+            return "{}, your time is {}.".format(author.nick, get_timestr(tz))
         else:
-            return "{}'s time is {}.".format(member.mention, get_timestr(tz))
+            return "{}'s time is {}.".format(member.nick, get_timestr(tz))
     else:
         if member is author:
-            return "I don't know your time zone, {}. use !settime to tell me!".format(author.mention)
+            return "I don't know your time zone, {}. use !settime to tell me!".format(author.nick)
         else:
-            return "I don't know {}'s time zone, use !settime to tell me!".format(member.mention)
+            return "I don't know {}'s time zone, use !settime to tell me!".format(member.nick)
 
 def get_time_of(members, author, usertimes, response):
     for member in members:
